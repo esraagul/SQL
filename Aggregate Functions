@@ -1,0 +1,73 @@
+**COUNT**
+The COUNT() aggregate function returns the total number of rows that match the specified criteria. 
+>For instance, to find the total number of employees who have less than 5 years of experience, the given query can be used.
+  SELECT COUNT(*)
+  FROM employees
+  WHERE experience < 5;
+Note: A column name of the table can also be used instead of *. Unlike COUNT(*), this variation COUNT(column) will not count NULL values in that column.
+
+**GROUP BY**
+The GROUP BY clause will group records in a result set by identical values in one or more columns. 
+It is often used in combination with aggregate functions to query information of similar records. 
+The GROUP BY clause can come after FROM or WHERE but must come before any ORDER BY or LIMIT clause.
+>Return the average valuation, in each category.
+  SELECT category, AVG(valuation) 
+  FROM startups
+  GROUP BY category;
+>Return the average valuation, in each category.Round the averages to two decimal places.Lastly, order the list from highest averages to lowest.
+  SELECT category, ROUND(AVG(valuation),2) 
+  FROM startups
+  GROUP BY category
+  ORDER BY 2 DESC;
+
+
+**HAVING**
+The HAVING clause is used to further filter the result set groups provided by the GROUP BY clause.
+HAVING is often used with aggregate functions to filter the result set groups based on an aggregate property.
+>filter the result to only include categories that have more than three companies in them.
+  SELECT category, COUNT(*)
+  FROM startups
+  GROUP BY category
+  HAVING COUNT(*)>3;
+(Because you are filtering on a condition that has an aggregate function, you need to use HAVING instead of WHERE)
+The HAVING clause must always come after a GROUP BY clause but must come before any ORDER BY or LIMIT clause.
+HAVING does not support aliases in the same way that ORDER BY does, so use the full column name(i.e. you cannot say having 2>3 instead of HAVING COUNT(*)>3).
+
+
+**strftime()**
+SQLite comes with a strftime() function - a very powerful function that allows you to return a formatted date.
+It takes two arguments: strftime(format, column)
+>Let’s test this function out:
+  SELECT timestamp,
+  strftime('%H', timestamp)
+  FROM hacker_news
+  GROUP BY 1
+  LIMIT 20;
+This returns the hour, HH, of the timestamp column!
+For strftime(__, timestamp):
+  %Y returns the year (YYYY)
+  %m returns the month (01-12)
+  %d returns the day of the month (1-31)
+  %H returns 24-hour clock (00-23)
+  %M returns the minute (00-59)
+  %S returns the seconds (00-59)
+if timestamp format is YYYY-MM-DD HH:MM:SS.
+READ MORE: https://www.sqlite.org/lang_datefunc.html
+
+>Let’s write a query that returns three columns:
+  The hours of the timestamp
+  The average score for each hour
+  The count of stories for each hour
+>Then do the followings:
+>Round the average scores (ROUND()).
+>Rename the columns to make it more readable (AS).
+>Add a WHERE clause to filter out the NULL values in timestamp.
+  SELECT strftime('%H', timestamp) AS 'Hour', 
+     ROUND(AVG(score), 1) AS 'Average Score', 
+     COUNT(*) AS 'Number of Stories'
+  FROM hacker_news
+  WHERE timestamp IS NOT NULL
+  GROUP BY 1
+  ORDER BY 2 DESC;
+
+
