@@ -41,3 +41,36 @@ WHERE id = 1;
 
 SELECT *
 FROM friends;
+
+
+
+Combining your knowledge of LIMIT and ORDER BY, write a query that returns the top 3 highest rated movies.
+Select all the columns.
+SELECT *
+FROM movies
+ORDER BY imdb_rating DESC
+LIMIT 3;
+
+
+If you want to find Italian restaurants with at least three dollar signs:
+SELECT *
+FROM nomnom
+WHERE cuisine = 'Italian'
+   AND price LIKE '%$$$%';
+
+
+
+SELECT name,
+ CASE
+  WHEN review > 4.5 THEN 'Extraordinary'
+  WHEN review > 4 THEN 'Excellent'
+  WHEN review > 3 THEN 'Good'
+  WHEN review > 2 THEN 'Fair'
+  ELSE 'Poor'
+ END AS 'Review'
+FROM nomnom;
+
+
+
+
+WHERE filter rows and HAVING filter groups.
