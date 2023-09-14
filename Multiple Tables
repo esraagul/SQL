@@ -1,0 +1,87 @@
+**JOIN**
+>The WHERE clause goes after the JOIN!
+  SELECT *
+  FROM orders
+  JOIN subscriptions
+    ON orders.subscription_id = subscriptions.subscription_id
+  WHERE subscriptions.description = 'Fashion Magazine';
+
+When we perform a simple JOIN (often called an inner join) our result only includes rows that match our ON condition.
+
+>What if we want to combine two tables and keep some of the un-matched rows?: LEFT JOIN
+
+**Primary vs Foreign Key**
+Each of these tables has a column that uniquely identifies each row of that table:
+  order_id for orders
+  subscription_id for subscriptions
+  customer_id for customers
+These special columns are called primary keys.
+A table can not have more than one primary key column.
+Note that customer_id (the primary key for customers) and subscription_id (the primary key for subscriptions) both appear in this.
+When the primary key for one table appears in a different table, it is called a foreign key.
+Generally, the primary key will just be called id. Foreign keys will have more descriptive names.
+
+
+**Cross Join**
+A more common usage of CROSS JOIN is when we need to compare each row of a table to a list of values.
+
+**With**
+Often times, we want to combine two tables, but one of the tables is the result of another calculation.
+  WITH previous_results AS (
+     SELECT ...
+     ...
+     ...
+     ...
+  )
+  SELECT *
+  FROM previous_results
+  JOIN customers
+    ON _____ = _____;
+
+The WITH statement allows us to perform a separate query (such as aggregating customer’s subscriptions).
+previous_results is the alias that we will use to reference any columns from the query inside of the WITH clause.
+Essentially, we are putting a whole first query inside the parentheses () and giving it a name. 
+After that, we can use this name as if it’s a table and write a new query using the first query.
+
+  WITH previous_query AS(
+    SELECT customer_id,
+      COUNT(subscription_id) AS 'subscriptions'
+    FROM orders
+    GROUP BY customer_id
+  )
+  SELECT customers.customer_name, 
+     previous_query.subscriptions
+  FROM previous_query
+  JOIN customers
+  ON previous_query.customer_id = customers.customer_id;
+
+>Here, we are essentially giving everything inside the parentheses (the sub-query) the name of previous_query using AS.
+>Then, previous_query is used as a temporary table that we will query from and also join with the customers table:
+>Do not include ; inside of the () of your WITH statement.
+
+
+                                                    MULTIPLE TABLES
+                                                        Review
+In this lesson, we learned about relationships between tables in relational databases and how to query information from multiple tables using SQL.
+
+Let’s summarize what we’ve learned so far:
+
+1)JOIN will combine rows from different tables if the join condition is true.
+2)LEFT JOIN will return every row in the left table, and if the join condition is not met, NULL values are used to fill in the columns from the right table.
+3)Primary key is a column that serves a unique identifier for the rows in the table.
+4)Foreign key is a column that contains the primary key to another table.
+5)CROSS JOIN lets us combine all rows of one table with all rows of another table.
+6)UNION stacks one dataset on top of another.
+7)WITH allows us to define one or more temporary tables that can be used in the final query.
+8)INNER JOIN is the default JOIN and it will only return results matching the condition specified by ON.
+
+
+>Suppose we want to create a Trip Log with the trips and its users.
+>Find the columns to join between trips and riders and combine the two tables using a LEFT JOIN.
+>Let trips be the left table.
+  SELECT *
+  FROM trips
+  LEFT JOIN riders 
+    ON trips.rider_id = riders.id;
+
+
