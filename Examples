@@ -8,4 +8,7 @@ FROM Views
 WHERE author_id = viewer_id
 ORDER BY author_id;
 
-2)***
+2)Length of character
+SELECT tweet_id
+FROM Tweets
+WHERE LENGTH(content)>15;
