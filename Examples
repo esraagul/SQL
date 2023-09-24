@@ -22,3 +22,11 @@ From Employees
 Left Join EmployeeUNI
     ON Employees.id = EmployeeUNI.id;
 
+4) LEFT JOIN, you can select a variable that only exists in the other table
+
+# Write your MySQL query statement below
+SELECT year, price, Product.product_name
+FROM Sales
+LEFT JOIN Product
+    ON Sales.product_id = Product.product_id;
+
